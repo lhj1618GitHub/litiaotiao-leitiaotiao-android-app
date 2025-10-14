@@ -4,7 +4,7 @@
 
 布局查看工具[下载：](https://github.com/SongYeXiaoLuo/Xiaoluo.spy/releases)
 
-# [李跳跳网站](https://litiaotiao.cn/);
+# [李跳跳网站](https://litiaotiao.cn/);[GitHub-李跳跳](https://github.com/rongzhiy/LiTiaotiao))
 
 # [雷跳跳官网](https://www.pgyer.com/leitt)；[GitHub-雷跳跳](https://github.com/leihaogit/leitt)
 
