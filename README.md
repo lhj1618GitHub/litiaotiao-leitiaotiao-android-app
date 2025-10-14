@@ -1,6 +1,5 @@
-# litiaotiao-Rules-android-app
 
-# 附：李跳跳app+雷跳跳app+规则+去重工具+布局查看工具
+# 李跳跳app+雷跳跳app+规则+去重工具+布局查看工具
 
 布局查看工具[下载：](https://github.com/SongYeXiaoLuo/Xiaoluo.spy/releases)
 
