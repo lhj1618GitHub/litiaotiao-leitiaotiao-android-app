@@ -1,6 +1,6 @@
 # litiaotiao-Rules-android-app
 
-# 李跳跳app-规则-去重
+# 附：李跳跳app+规则+去重工具
 
 # [李跳跳网站](https://litiaotiao.cn/)
 
