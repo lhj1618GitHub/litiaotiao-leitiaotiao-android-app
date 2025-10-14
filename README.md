@@ -2,11 +2,11 @@
 
 # 附：李跳跳app+雷跳跳app+规则+去重工具+布局查看工具
 
-[雷跳跳官网](https://github.com/leihaogit/leitt)
-
 布局查看工具[下载：](https://github.com/SongYeXiaoLuo/Xiaoluo.spy/releases)
 
-# [李跳跳网站](https://litiaotiao.cn/)
+# [李跳跳网站](https://litiaotiao.cn/);
+
+# [雷跳跳官网](https://github.com/leihaogit/leitt)
 
 一款可以跳过开屏广告的安卓手机软件工具。其范围广、精确高、有效“干掉”广告的特点受到众多网友好评，被戏称为“互联网药神”。
 
