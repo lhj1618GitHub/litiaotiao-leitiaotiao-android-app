@@ -1,0 +1,61 @@
+通用格式：
+
+一：开屏广告规则
+
+{"keywords_append":["xxx"]}
+
+说明：在默认规则的基础上追加规则。
+
+二：弹窗广告-持续状态
+
+{
+  "popup_rules": [
+    {
+      "id": "还剩&秒",
+      "action": "还剩&秒",
+      "times": 0
+    },
+    {
+      "id": "+检测到&-户体验",
+      "action": "=以后再说",
+      "times": 1
+    }
+  ],
+  "search_times_popup": 5,
+  "delay_popup": 200,
+  "click_way_popup": 1,
+  "unite_popup_rules": true
+}
+
+
+点击说明：
+点击文案："action": "跳过"
+点击控件id： "action": "tv_close_button"
+点击控件button："action": "500,900,620,1020"
+
+点击复选框(CheckBox)：
+在控件button后面追加数字0或1来表示复选框的两种状态，
+点击已选中状态：100,200,300,400,1
+点击未选中状态：100,200,300,400,0
+
+详细说明：
+
+1.popup_rules:
+id: 用于识别弹窗的关键字。
+支持模糊匹配（默认）、首尾匹配（使用+和-）、全匹配（使用=）。
+可以用&连接多个条件，表示所有条件都必须满足。
+action: 指定要执行的操作。
+文字：自动点击带有该文字的按钮。
+控件ID/bounds：自动点击指定ID或bounds的控件。
+GLOBAL_ACTION_BACK: 使用返回键。
+times: 设置点击次数，默认为1次。
+如果不希望点击，设置为0。
+如果需要多次点击同一按钮，增加此数值。
+
+2.其他可选参数:
+search_times_popup: 设置搜索次数，越小越省电，最好是个位数。
+delay_popup: 延时指定ms点击。
+click_way_popup: 设置强制点击，默认为0，设置为1表示强制点击。
+unite_popup_rules: 是否启用联合规则，默认为false。启用后可以处理持续任务，比如倒计时后再点击某个按钮。
+
+
