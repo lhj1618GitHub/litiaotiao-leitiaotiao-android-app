@@ -1,9 +1,10 @@
 
 # 李跳跳app+雷跳跳app+规则+去重工具+布局查看工具
 
-# [布局工具](https://github.com/SongYeXiaoLuo/Xiaoluo.spy/releases)；[李跳跳进阶指南](https://litiaotiao.cn/posts/litiaotiao_advanced_guide/)
+# [布局工具](https://github.com/SongYeXiaoLuo/Xiaoluo.spy/releases)；[李跳跳规则示范及说明](https://github.com/lhj1618GitHub/litiaotiao-leitiaotiao-android-app/releases/download/20251014/litiaotiao_sample.txt)
 
-# [李跳跳网站](https://litiaotiao.cn/)；[GitHub-李跳跳](https://github.com/rongzhiy/LiTiaotiao)
+
+# [李跳跳网站](https://litiaotiao.cn/)；[GitHub-李跳跳](https://github.com/rongzhiy/LiTiaotiao)；[李跳跳进阶指南](https://litiaotiao.cn/posts/litiaotiao_advanced_guide/)
 
 # [雷跳跳官网](https://www.pgyer.com/leitt)；[GitHub-雷跳跳](https://github.com/leihaogit/leitt)
 
