@@ -1,7 +1,7 @@
 
 # 李跳跳app+雷跳跳app+规则+去重工具+布局查看工具
 
-布局查看工具[下载：](https://github.com/SongYeXiaoLuo/Xiaoluo.spy/releases)
+[布局工具](https://github.com/SongYeXiaoLuo/Xiaoluo.spy/releases);[李跳跳进阶指南](https://litiaotiao.cn/posts/litiaotiao_advanced_guide/)
 
 # [李跳跳网站](https://litiaotiao.cn/)；[GitHub-李跳跳](https://github.com/rongzhiy/LiTiaotiao)
 
@@ -34,7 +34,7 @@
 
 
 
-# 李跳跳进阶指南
+# [李跳跳进阶指南](https://litiaotiao.cn/posts/litiaotiao_advanced_guide/)
 
 注意：小白萌新不需要看这份进阶指南，使用默认设置已经可以跳过绝大部分广告了。
 
