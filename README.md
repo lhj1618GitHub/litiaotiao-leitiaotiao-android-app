@@ -1,17 +1,16 @@
 
-# 李跳跳app+雷跳跳app+规则+去重工具+布局查看工具
+# 李跳跳app+规则合并去重工具+布局查看工具
 
 可以跳过开屏广告的安卓手机软件工具。其范围广、精确高、有效“干掉”广告的特点受到众多网友好评，被戏称为“互联网药神”。
 
-# 推荐：[布局工具](https://github.com/SongYeXiaoLuo/Xiaoluo.spy/releases)；[李跳跳规则示范及说明](https://github.com/lhj1618GitHub/litiaotiao-leitiaotiao-android-app/releases/download/20251014/litiaotiao_sample.txt)
+# [autojs-4.1](https://github.com/enjoyDay/my-autojs4)；[界面分析](https://github.com/SongYeXiaoLuo/Xiaoluo.spy/releases)；[李跳跳规则示范及说明](https://github.com/lhj1618GitHub/litiaotiao-leitiaotiao-android-app/releases/download/20251014/litiaotiao_sample.txt)
 
 
 # [李跳跳网站](https://litiaotiao.cn/)；[GitHub-李跳跳](https://github.com/rongzhiy/LiTiaotiao)；[李跳跳进阶指南](https://litiaotiao.cn/posts/litiaotiao_advanced_guide/)
 
 # [Touch-Helper](https://github.com/zfdang/Android-Touch-Helper/releases)：开屏跳过，仅使用无障碍服务；可采集控件信息/添加坐标点击/修改目标文字；资源占用最低；
 
-[雷跳跳官网](https://www.pgyer.com/leitt)；[GitHub-雷跳跳](https://github.com/leihaogit/leitt)；不推荐，相当于Touch-Helper的功能阉割版；
-
+# [GKD](https://github.com/gkd-kit/gkd)：功能更强；订阅式规则，自定义难度更高；使用管理员权限，可选shizuku；
 
 # 更多功能
 
