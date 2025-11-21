@@ -3,7 +3,13 @@
 
 可以跳过开屏广告的安卓手机软件工具。其范围广、精确高、有效“干掉”广告的特点受到众多网友好评，被戏称为“互联网药神”。
 
-# [autojs-4.1](https://github.com/enjoyDay/my-autojs4)；附-脚本打包插件（js-to-apk-4.1.0 Alpha2-release）；附：LiTool-李跳跳自定义规则编写辅助工具，配合autos可免修改粘贴。
+# [autojs-4.1](https://github.com/enjoyDay/my-autojs4)；附-脚本打包插件（js-to-apk-4.1.0 Alpha2-release）；
+
+附：LiTool-李跳跳自定义规则编写辅助工具，配合autos可免修改粘贴。
+
+<img width="802" height="494" alt="image" src="https://github.com/user-attachments/assets/37878ac2-39a7-48d5-adb0-92bee27ee8d3" />
+
+
 [界面分析](https://github.com/SongYeXiaoLuo/Xiaoluo.spy/releases)；[李跳跳规则示范及说明](https://github.com/lhj1618GitHub/litiaotiao-leitiaotiao-android-app/releases/download/20251014/litiaotiao_sample.txt)
 
 
