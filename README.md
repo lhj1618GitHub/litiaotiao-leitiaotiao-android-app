@@ -23,16 +23,6 @@
 
 跳过广告提示语；微信自动登录；微信自动查看原图；微信自动勾选原图；QQ自动登录；QQ自动查看原图；网易云更新弹窗；抖音更新弹窗；其它任意弹窗
 
-
-# 启用李跳跳
-
-打开软件，点击开启->无障碍->更多已下载服务->李跳跳->打开开关。
-
-<img width="970" height="560" alt="image" src="https://github.com/user-attachments/assets/0f01c4bb-8077-459a-89d5-50127fffa968" />
-
-
-# 
-
 [利用autojs获取控件信息](https://litiaotiao.cn/posts/use_autojs_to_get_control_information/)
 
 [李跳跳实用规则示例](https://litiaotiao.cn/posts/litiaotiao_share_practical_rules/)
@@ -43,6 +33,9 @@
 [下载规则合集json文件](https://litiaotiao.cn/AllRules.json)
 
 
+# 启用李跳跳
+
+打开软件，点击开启->无障碍->更多已下载服务->李跳跳->打开开关。
 
 # [李跳跳进阶指南](https://litiaotiao.cn/posts/litiaotiao_advanced_guide/)
 
