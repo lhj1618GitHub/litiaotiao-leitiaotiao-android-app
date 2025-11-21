@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>规则生成器</title>
+    <style>
+        :root {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --bg-tertiary: #3d3d3d;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --accent: #4a9eff;
+            --accent-hover: #3a8eef;
+            --success: #4caf50;
+            --border: #555;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: nowrap;
+            gap: 12px;
+        }
+
+        .switch-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #555;
+            transition: .3s;
+            border-radius: 26px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        .download-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 13px;
+            padding: 6px 12px;
+            border-radius: 5px;
+            transition: all 0.2s;
+            border: 1px solid var(--accent);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .download-link:hover {
+            background-color: rgba(74, 158, 255, 0.1);
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            width: 100%;
+            flex-wrap: nowrap;
+        }
+
+        .input-label {
+            min-width: 70px;
+            font-weight: 500;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            position: relative;
+            min-width: 0;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 10px 12px;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 13px;
+            transition: border-color 0.2s;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .text-input::placeholder {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        .clear-btn {
+            padding: 8px 12px;
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            white-space: nowrap;
+            transition: all 0.2s;
+            height: 36px;
+            flex-shrink: 0;
+        }
+
+        .clear-btn:hover {
+            background-color: #4d4d4d;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 10px;
+            margin: 16px 0;
+            width: 100%;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 10px 16px;
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background-color: #4d4d4d;
+            border-color: var(--accent);
+        }
+
+        .output-area {
+            width: 100%;
+            min-height: 120px;
+            max-height: 200px;
+            padding: 12px;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            resize: vertical;
+            margin-bottom: 12px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            overflow-y: auto;
+        }
+
+        .bottom-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .copy-btn, .help-btn {
+            padding: 10px 16px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover, .help-btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 90%;
+            max-height: 80%;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            width: 100%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .help-content {
+            line-height: 1.6;
+            font-size: 13px;
+        }
+
+        .help-section {
+            margin-bottom: 20px;
+        }
+
+        .help-section h3 {
+            color: var(--accent);
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .help-section p {
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .help-section ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .help-section li {
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+        }
+
+        pre {
+            background-color: var(--bg-tertiary);
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 10px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 12px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--success);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            z-index: 1001;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+            
+            .container {
+                padding: 16px;
+            }
+            
+            .header {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                gap: 10px;
+                flex-wrap: nowrap;
+            }
+            
+            .switch-container {
+                font-size: 13px;
+            }
+            
+            .download-link {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+            
+            .input-group {
+                flex-direction: row;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: nowrap;
+            }
+            
+            .input-label {
+                min-width: 60px;
+                font-size: 12px;
+            }
+            
+            .text-input {
+                padding: 10px;
+                font-size: 12px;
+            }
+            
+            .clear-btn {
+                padding: 8px 12px;
+                font-size: 11px;
+                min-width: 55px;
+            }
+            
+            .button-row {
+                flex-direction: row;
+                flex-wrap: nowrap;
+                gap: 8px;
+            }
+            
+            .action-btn {
+                padding: 10px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="page-title">配合Autojs使用最佳</div>
+        
+        <div class="header">
+            <div class="switch-container">
+                <span>开屏广告</span>
+                <label class="switch">
+                    <input type="checkbox" id="toggleSwitch">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <a href="https://gitee.com/lhj1618/litiaotiao-autojs-android-app/releases" 
+               target="_blank" 
+               class="download-link"
+               onclick="window.open(this.href, '_blank'); return false;">
+                下载李跳跳/autojs
+            </a>
+        </div>
+
+        <div class="input-group" id="firstInputGroup">
+            <span class="input-label">设文字为：</span>
+            <div class="input-wrapper">
+                <input type="text" 
+                       id="textInput" 
+                       class="text-input" 
+                       placeholder="需唯一性，优先desc、text">
+            </div>
+            <button class="clear-btn" id="clearTextBtn">清空</button>
+        </div>
+
+        <div class="input-group">
+            <span class="input-label">设xxx为：</span>
+            <div class="input-wrapper">
+                <input type="text" 
+                       id="actionInput" 
+                       class="text-input" 
+                       placeholder="返回键有效时留空">
+            </div>
+            <button class="clear-btn" id="clearActionBtn">清空</button>
+        </div>
+
+        <div class="button-row">
+            <button class="action-btn" id="setControlBtn">设控件</button>
+            <button class="action-btn" id="setGeneralBtn">设一般</button>
+            <button class="action-btn" id="setContinuousBtn">设连续</button>
+        </div>
+
+        <textarea id="outputArea" class="output-area" readonly>请设置规则参数...</textarea>
+
+        <div class="bottom-buttons">
+            <button class="copy-btn" id="copyBtn">复制</button>
+            <button class="help-btn" id="helpBtn">规则说明</button>
+        </div>
+    </div>
+
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">规则说明</h2>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="help-content">
+                <div class="help-section">
+                    <h3>注意：规则里面的文字默认是模糊匹配的，符号都是英文符号；无空格。</h3>
+                </div>
+                
+                <div class="help-section">
+                    <h3>一：开屏广告规则</h3>
+                    <p>1.覆盖默认规则：</p>
+                    <pre>{"keywords":["xxx"]}</pre>
+                    <p>2.追加规则-在默认规则的基础上：</p>
+                    <pre>{"keywords_append":["xxx"]}</pre>
+                    <p>其中xxx可以是跳过按钮的文字，id或bounds。</p>
+                    <p>比如：</p>
+                    <pre>{"keywords":["关闭广告"]}</pre>
+                    <pre>{"keywords":["tv_close_button"]}</pre>
+                    <pre>{"keywords":["900,160,1170,250"]}</pre>
+                </div>
+
+                <div class="help-section">
+                    <h3>二：弹窗规则</h3>
+                    <p>①基础版：</p>
+                    <pre>{"popup_rules":[{"id":"ooo","action":"xxx"}]}</pre>
+                    <p>意思是：当检测到ooo这几个文字的时候，就自动点击 xxx 这个按钮。</p>
+                    <p>xxx可以是跳过按钮的 文字/id/bounds 中的任意一个</p>
+                    <pre>{"popup_rules":[{"id":"ooo","action":"GLOBAL_ACTION_BACK"}]}</pre>
+                    <p>意思是：当检测到ooo这几个文字的时候，就自动使用手机返回键。</p>
+                    
+                    <p>②倒计时/多个广告版：</p>
+                    <pre>{"popup_rules":[{"id":"还剩&秒","action":"还剩&秒",times:0},{"id":"广告","action":"关闭按钮"}],"unite_popup_rules":true}</pre>
+                    <p>说明：</p>
+                    <p>持续任务的耗时是不确定的，需要把这个过程的中间态和要点击的按钮用两个规则分开表示</p>
+                    <p>基本结构 {"popup_rules":[倒计时过程中的规则,需要点击按钮时的规则],联合规则开启}</p>
+                    <p>倒计时过程中的规则：{"id":"还剩&秒","action":"还剩&秒",times:0}</p>
+                    <p>需要点击按钮时的规则：{"id":"广告","action":"关闭按钮"}</p>
+                    <p>联合规则开启："unite_popup_rules":true</p>
+                    
+                    <p>③进阶版：</p>
+                    <pre>{"popup_rules":[{"id":"+ooo&-ppp","action":"=xxx"}]}</pre>
+                    <p>意思是：当检测到以 ooo 开头，且以 ppp 结尾的文字时，就自动点击显示 xxx 文字的按钮或位置；</p>
+                    
+                    <p>设置强制点击</p>
+                    <pre>{"click_way_popup":1}</pre>
+                    
+                    <p>设置搜索次数5</p>
+                    <pre>{"search_times_popup":5}</pre>
+                    
+                    <p>设置延迟200ms点击-开屏广告：</p>
+                    <pre>{"delay":200}</pre>
+                    
+                    <p>设置延迟200ms点击-弹窗广告：</p>
+                    <pre>{"delay_popup":200}</pre>
+                    
+                    <p>设置点击次数2，times:0 表示不点击</p>
+                    <pre>{"popup_rules":[{"id":"ooo","action":"xxx",times:2}]}</pre>
+                    
+                    <p>联合规则开启</p>
+                    <pre>{"unite_popup_rules":true}</pre>
+                    
+                    <p>复选框（CheckBox）-在bounds的后面追加数字0或1来表示两种状态；</p>
+                    <p>假设某个复选框控件的bounds是100,200,300,400；则</p>
+                    <p>已选中状态为：100,200,300,400,1</p>
+                    <p>未选中状态为：100,200,300,400,0</p>
+                </div>
+
+                <div class="help-section">
+                    <h3>三：其它说明</h3>
+                    <p>ooo/ppp是文字；</p>
+                    <p>xxx可以是跳过按钮的 文字/id/bounds 中的任意一个或返回键；</p>
+                    <p>+的意思是匹配开头的文字；</p>
+                    <p>-的意思是匹配结尾的文字；</p>
+                    <p>=的意思是匹配完全相同的文字；</p>
+                    <p>&是逻辑里的并且：是用来连接多个条件的。</p>
+                </div>
+
+                <div class="help-section">
+                    <h3>四：常见问题</h3>
+                    <p>1.我的规则正确但无法关闭对应弹窗怎么办？</p>
+                    <p>答：判断你的任务是瞬间任务还是持续任务；</p>
+                    <p>瞬间任务：</p>
+                    <p>如果有跳过提示，设置强制点击就行：{"popup_rules":[],"click_way_popup":1}</p>
+                    <p>如果没跳过提示，延长搜索次数就行：{"popup_rules":[],"search_times_popup":5}</p>
+                    <p>持续任务：</p>
+                    <p>参考前面的倒计时弹窗，使用联合规则并开启：{"unite_popup_rules":true}</p>
+                    
+                    <p>2.出现误点怎么办？</p>
+                    <p>答：①把目标APP加入白名单</p>
+                    <p>②修改自定义规则或用参数keywords来覆盖默认的规则：{"keywords":["xxx"]}</p>
+                    
+                    <p>3.不知道某个弹窗属于哪个APP怎么办？</p>
+                    <p>答：通过autojs软件获取这个弹窗任意控件的控件信息，</p>
+                    <p>复制控件信息里面的包名 (packageName) 信息，</p>
+                    <p>通过包名在李跳跳里面搜索对应APP就行。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">复制成功！</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('页面加载完成，开始初始化...');
+            
+            // 获取所有DOM元素
+            const toggleSwitch = document.getElementById('toggleSwitch');
+            const textInput = document.getElementById('textInput');
+            const actionInput = document.getElementById('actionInput');
+            const clearTextBtn = document.getElementById('clearTextBtn');
+            const clearActionBtn = document.getElementById('clearActionBtn');
+            const setControlBtn = document.getElementById('setControlBtn');
+            const setGeneralBtn = document.getElementById('setGeneralBtn');
+            const setContinuousBtn = document.getElementById('setContinuousBtn');
+            const outputArea = document.getElementById('outputArea');
+            const copyBtn = document.getElementById('copyBtn');
+            const helpBtn = document.getElementById('helpBtn');
+            const helpModal = document.getElementById('helpModal');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const toast = document.getElementById('toast');
+            const firstInputGroup = document.getElementById('firstInputGroup');
+
+            // 检查元素是否存在
+            if (!toggleSwitch || !textInput || !actionInput) {
+                console.error('找不到必要的DOM元素');
+                return;
+            }
+
+            console.log('所有DOM元素已找到');
+
+            // 默认变量
+            let ooo = '';
+            let xxx = 'GLOBAL_ACTION_BACK';
+
+            // 显示提示
+            function showToast(message) {
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2000);
+            }
+
+            // 处理输入内容格式
+            function processInput(input) {
+                if (!input) return '';
+                
+                let processed = input.replace(/\s/g, '');
+                
+                // 检查格式 *=(*)
+                const pattern1 = /.*=\(([^)]+)\)/;
+                const match1 = processed.match(pattern1);
+                if (match1) {
+                    return match1[1];
+                }
+                
+                // 检查格式 *=*
+                const pattern2 = /.*=(.+)/;
+                const match2 = processed.match(pattern2);
+                if (match2) {
+                    return match2[1];
+                }
+                
+                return processed;
+            }
+
+            // 更新变量
+            function updateVariables() {
+                ooo = processInput(textInput.value);
+                xxx = processInput(actionInput.value) || 'GLOBAL_ACTION_BACK';
+                console.log('变量已更新:', { ooo, xxx });
+            }
+
+            // 紧凑格式JSON
+            function compactJSON(obj) {
+                try {
+                    return JSON.stringify(obj).replace(/\s+/g, '');
+                } catch (error) {
+                    console.error('JSON压缩错误:', error);
+                    return JSON.stringify(obj).replace(/\s+/g, '');
+                }
+            }
+
+            // 复制到剪贴板
+            function copyToClipboard(text) {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.left = '-9999px';
+                textarea.style.top = '-9999px';
+                document.body.appendChild(textarea);
+                
+                try {
+                    textarea.select();
+                    textarea.setSelectionRange(0, 99999);
+                    
+                    let success = false;
+                    try {
+                        success = document.execCommand('copy');
+                        console.log('execCommand复制结果:', success);
+                    } catch (err) {
+                        console.error('execCommand复制失败:', err);
+                    }
+                    
+                    if (!success && navigator.clipboard) {
+                        navigator.clipboard.writeText(text)
+                            .then(() => {
+                                console.log('Clipboard API复制成功');
+                                showToast('复制成功！');
+                            })
+                            .catch(err => {
+                                console.error('Clipboard API复制失败:', err);
+                                showToast('复制失败，请手动复制');
+                            });
+                    } else if (success) {
+                        console.log('execCommand复制成功');
+                        showToast('复制成功！');
+                    } else {
+                        showToast('复制失败，请手动复制');
+                    }
+                } catch (error) {
+                    console.error('复制错误:', error);
+                    showToast('复制失败，请手动复制');
+                } finally {
+                    document.body.removeChild(textarea);
+                }
+            }
+
+            // 事件监听器 - 清空按钮
+            clearTextBtn.addEventListener('click', function() {
+                console.log('清空文字输入框');
+                textInput.value = '';
+                outputArea.value = '请设置规则参数...';
+            });
+
+            clearActionBtn.addEventListener('click', function() {
+                console.log('清空动作输入框');
+                actionInput.value = '';
+                outputArea.value = '请设置规则参数...';
+            });
+
+            // 事件监听器 - 开关按钮
+            toggleSwitch.addEventListener('change', function() {
+                console.log('开关状态:', this.checked);
+                if (this.checked) {
+                    firstInputGroup.classList.add('hidden');
+                    setContinuousBtn.classList.add('hidden');
+                } else {
+                    firstInputGroup.classList.remove('hidden');
+                    setContinuousBtn.classList.remove('hidden');
+                }
+            });
+
+            // 事件监听器 - 功能按钮
+            setControlBtn.addEventListener('click', function() {
+                console.log('点击设控件按钮');
+                updateVariables();
+                
+                let result;
+                if (!toggleSwitch.checked) {
+                    // 开关关闭 - 控件规则
+                    result = {
+                        "id": ooo || "ooo",
+                        "action": xxx || "xxx"
+                    };
+                } else {
+                    // 开关开启 - 关键词规则
+                    result = {
+                        "keywords_append": [xxx || "xxx"]
+                    };
+                }
+                
+                outputArea.value = compactJSON(result);
+                console.log('生成控件规则:', result);
+            });
+
+            setGeneralBtn.addEventListener('click', function() {
+                console.log('点击设一般按钮');
+                updateVariables();
+                
+                let result;
+                if (!toggleSwitch.checked) {
+                    // 开关关闭 - 弹窗规则
+                    result = {
+                        "popup_rules": [{
+                            "id": ooo || "ooo",
+                            "action": xxx || "xxx"
+                        }]
+                    };
+                } else {
+                    // 开关开启 - 关键词规则
+                    result = {
+                        "keywords": [xxx || "xxx"]
+                    };
+                }
+                
+                outputArea.value = compactJSON(result);
+                console.log('生成一般规则:', result);
+            });
+
+            setContinuousBtn.addEventListener('click', function() {
+                console.log('点击设连续按钮');
+                updateVariables();
+                
+                // 连续规则
+                const result = {
+                    "popup_rules": [
+                        {
+                            "id": "还剩&秒",
+                            "action": "还剩&秒",
+                            "times": 0
+                        },
+                        {
+                            "id": ooo || "ooo",
+                            "action": xxx || "xxx"
+                        }
+                    ],
+                    "unite_popup_rules": true
+                };
+                
+                outputArea.value = compactJSON(result);
+                console.log('生成连续规则:', result);
+            });
+
+            // 事件监听器 - 复制按钮
+            copyBtn.addEventListener('click', function() {
+                console.log('点击复制按钮');
+                if (outputArea.value && outputArea.value !== '请设置规则参数...') {
+                    copyToClipboard(outputArea.value);
+                } else {
+                    showToast('请先生成规则再复制');
+                }
+            });
+
+            // 事件监听器 - 帮助按钮
+            helpBtn.addEventListener('click', function() {
+                console.log('点击帮助按钮');
+                helpModal.style.display = 'flex';
+            });
+
+            // 关闭模态框
+            closeModalBtn.addEventListener('click', function() {
+                helpModal.style.display = 'none';
+            });
+
+            // 点击模态框外部关闭
+            helpModal.addEventListener('click', function(e) {
+                if (e.target === helpModal) {
+                    helpModal.style.display = 'none';
+                }
+            });
+
+            console.log('所有事件监听器已绑定');
+        });
+    </script>
+</body>
+</html>
