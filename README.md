@@ -7,7 +7,8 @@
 
 # 附：[LiTT](https://github.com/lhj1618GitHub/litiaotiao-autojs-android-app/releases)-李跳跳自定义规则编写辅助工具，配合autos可免修改粘贴。优先下载HTML文件，手机电脑都可以使用，手机也可下载apk文件。
 
-<img width="870" height="643" alt="image" src="https://github.com/user-attachments/assets/b3a873bc-f70f-4e34-8703-be3673cdc217" />
+<img width="856" height="687" alt="image" src="https://github.com/user-attachments/assets/e28662a8-1a66-4681-b091-1aab9b799ed0" />
+
 
 
 
