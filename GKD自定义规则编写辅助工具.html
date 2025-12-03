@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GKD自定义规则编写辅助工具</title>
+    <style>
+        :root {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --bg-tertiary: #3d3d3d;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent: #4a9cff;
+            --accent-hover: #5ca8ff;
+            --border: #404040;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --error: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.4;
+            padding: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+            font-size: 13px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h1 {
+            color: var(--accent);
+            margin-bottom: 8px;
+            font-size: 1.8rem;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            body {
+                padding: 10px;
+                font-size: 12px;
+            }
+        }
+
+        .card {
+            background-color: var(--bg-secondary);
+            border-radius: 6px;
+            padding: 15px;
+            border: 1px solid var(--border);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            color: var(--accent);
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            transition: border-color 0.2s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        textarea {
+            min-height: 60px;
+            resize: vertical;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.8rem;
+            line-height: 1.3;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .checkbox-group input {
+            width: auto;
+        }
+
+        .btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-tertiary);
+        }
+
+        .btn-secondary:hover {
+            background-color: #4d4d4d;
+        }
+
+        .rule-item {
+            background-color: var(--bg-tertiary);
+            border-radius: 3px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-left: 2px solid var(--accent);
+        }
+
+        .rule-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .rule-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .rule-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .btn-small {
+            padding: 4px 8px;
+            font-size: 0.75rem;
+        }
+
+        .preview-section {
+            grid-column: 1 / -1;
+            margin-top: 15px;
+        }
+
+        .code-preview {
+            background-color: #1e1e1e;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            padding: 12px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.75rem;
+            line-height: 1.2;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .json-key {
+            color: #9cdcfe;
+        }
+
+        .json-string {
+            color: #ce9178;
+        }
+
+        .json-number {
+            color: #b5cea8;
+        }
+
+        .json-boolean {
+            color: #569cd6;
+        }
+
+        .tab-container {
+            margin-bottom: 15px;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 15px;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .tab.active {
+            border-bottom-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .help-text {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        /* Android优化样式 */
+        @media (max-width: 480px) {
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+            
+            .btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+            
+            .card {
+                padding: 10px;
+            }
+        }
+
+        /* 复制优化 */
+        .code-preview::selection {
+            background-color: rgba(74, 156, 255, 0.3);
+        }
+        
+        /* 触摸设备优化 */
+        @media (hover: none) and (pointer: coarse) {
+            .btn {
+                min-height: 36px;
+            }
+            
+            input, textarea, select {
+                min-height: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>GKD自定义规则编写辅助工具</h1>
+        <p class="subtitle">简化GKD自定义规则的创建和编辑过程</p>
+    </header>
+
+    <div class="tab-container">
+        <div class="tabs">
+            <div class="tab active" data-tab="global">全局规则</div>
+            <div class="tab" data-tab="local">本地应用规则组</div>
+            <div class="tab" data-tab="single">单规则</div>
+        </div>
+
+        <div class="tab-content active" id="global-tab">
+            <div class="container">
+                <div class="card">
+                    <h2>全局规则配置</h2>
+                    
+                    <div class="form-group">
+                        <label for="global-key">Key</label>
+                        <input type="number" id="global-key" value="0" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="global-name">规则名称</label>
+                        <input type="text" id="global-name" value="开屏广告" placeholder="例如：开屏广告">
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="global-fastQuery" checked>
+                        <label for="global-fastQuery">快速查询 (fastQuery)</label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="global-matchTime">匹配时间 (ms)</label>
+                        <input type="number" id="global-matchTime" value="4000" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="global-actionMaximum">最大操作次数</label>
+                        <input type="number" id="global-actionMaximum" value="1" min="1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="global-resetMatch">重置匹配条件</label>
+                        <select id="global-resetMatch">
+                            <option value="app">app</option>
+                            <option value="activity">activity</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="section-title">
+                        <h2>规则列表</h2>
+                        <button class="btn btn-small" id="add-global-rule">添加规则</button>
+                    </div>
+                    
+                    <div id="global-rules-container">
+                        <div class="rule-item">
+                            <div class="rule-header">
+                                <span class="rule-title">规则 #1</span>
+                                <div class="rule-actions">
+                                    <button class="btn btn-small btn-secondary remove-rule">删除</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Key</label>
+                                <input type="number" class="rule-key" value="0" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>匹配条件 (matches)</label>
+                                <textarea class="rule-matches">[text*="跳过"][text.length<10][visibleToUser=true]</textarea>
+                                <p class="help-text">使用CSS选择器语法定义匹配条件</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="local-tab">
+            <div class="container">
+                <div class="card">
+                    <h2>应用规则组配置</h2>
+                    
+                    <div class="form-group">
+                        <label for="app-id">应用ID (包名)</label>
+                        <input type="text" id="app-id" placeholder="例如：com.example.app">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="app-name">应用名称</label>
+                        <input type="text" id="app-name" placeholder="例如：示例应用">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="app-desc">功能描述</label>
+                        <textarea id="app-desc" placeholder="描述此规则组的功能"></textarea>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="section-title">
+                        <h2>规则组列表</h2>
+                        <button class="btn btn-small" id="add-group">添加规则组</button>
+                    </div>
+                    
+                    <div id="groups-container">
+                        <!-- 规则组将通过JS动态添加 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="single-tab">
+            <div class="container">
+                <div class="card">
+                    <h2>单规则配置</h2>
+                    
+                    <div class="form-group">
+                        <label for="single-key">Key</label>
+                        <input type="number" id="single-key" value="1" min="1">
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="single-fastQuery" checked>
+                        <label for="single-fastQuery">快速查询 (fastQuery)</label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="single-activityIds">活动界面 (activityIds)</label>
+                        <input type="text" id="single-activityIds" placeholder="例如：com.example.MainActivity">
+                        <p class="help-text">可选字段，留空则不生成此属性</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="single-matches">匹配条件 (matches)</label>
+                        <textarea id="single-matches" placeholder='例如：[text="关闭"][visibleToUser=true]'></textarea>
+                        <p class="help-text">使用CSS选择器语法定义匹配条件</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>规则预览</h2>
+                    <div class="form-group">
+                        <p>在此配置单条独立规则，适用于简单的广告屏蔽或功能增强场景。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="preview-section">
+        <div class="card">
+            <h2>规则预览</h2>
+            <div class="code-preview" id="code-preview">
+                // 预览内容将通过JS动态生成
+            </div>
+            <div class="actions">
+                <button class="btn" id="copy-code">
+                    <span>📋</span> 复制代码
+                </button>
+                <button class="btn btn-secondary" id="reset-form">
+                    <span>🔄</span> 重置表单
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局规则管理
+        document.getElementById('add-global-rule').addEventListener('click', function() {
+            addGlobalRule();
+        });
+
+        // 本地规则组管理
+        document.getElementById('add-group').addEventListener('click', function() {
+            addGroup();
+        });
+
+        // 标签切换
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                this.classList.add('active');
+                document.getElementById(this.getAttribute('data-tab') + '-tab').classList.add('active');
+                
+                updatePreview();
+            });
+        });
+
+        // 复制代码 - Android优化版本
+        document.getElementById('copy-code').addEventListener('click', function() {
+            const codePreview = document.getElementById('code-preview');
+            const code = codePreview.textContent || codePreview.innerText;
+            
+            // 创建临时textarea用于复制
+            const textArea = document.createElement('textarea');
+            textArea.value = code;
+            textArea.style.position = 'fixed';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.select();
+            textArea.setSelectionRange(0, 99999); // 移动设备支持
+            
+            try {
+                const successful = document.execCommand('copy');
+                const originalText = this.innerHTML;
+                if (successful) {
+                    this.innerHTML = '<span>✅</span> 已复制';
+                } else {
+                    this.innerHTML = '<span>❌</span> 复制失败';
+                }
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                }, 2000);
+            } catch (err) {
+                console.error('复制失败:', err);
+                const originalText = this.innerHTML;
+                this.innerHTML = '<span>❌</span> 复制失败';
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                }, 2000);
+            }
+            
+            document.body.removeChild(textArea);
+        });
+
+        // 重置表单
+        document.getElementById('reset-form').addEventListener('click', function() {
+            if (confirm('确定要重置所有表单数据吗？')) {
+                document.getElementById('global-key').value = 0;
+                document.getElementById('global-name').value = '开屏广告';
+                document.getElementById('global-fastQuery').checked = true;
+                document.getElementById('global-matchTime').value = 4000;
+                document.getElementById('global-actionMaximum').value = 1;
+                document.getElementById('global-resetMatch').value = 'app';
+                
+                document.getElementById('app-id').value = '';
+                document.getElementById('app-name').value = '';
+                document.getElementById('app-desc').value = '';
+                
+                document.getElementById('single-key').value = 1;
+                document.getElementById('single-fastQuery').checked = true;
+                document.getElementById('single-activityIds').value = '';
+                document.getElementById('single-matches').value = '';
+                
+                // 重置规则容器
+                document.getElementById('global-rules-container').innerHTML = '';
+                document.getElementById('groups-container').innerHTML = '';
+                
+                // 添加默认的全局规则
+                addGlobalRule();
+                
+                updatePreview();
+            }
+        });
+
+        // 事件委托处理规则删除
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-rule')) {
+                e.target.closest('.rule-item').remove();
+                updatePreview();
+            }
+            
+            if (e.target.classList.contains('remove-group')) {
+                e.target.closest('.group-item').remove();
+                updatePreview();
+            }
+            
+            if (e.target.classList.contains('add-rule-to-group')) {
+                const groupItem = e.target.closest('.group-item');
+                addRuleToGroup(groupItem);
+            }
+        });
+
+        // 输入变化时更新预览
+        document.addEventListener('input', function(e) {
+            if (e.target.matches('input, textarea, select')) {
+                updatePreview();
+            }
+        });
+
+        document.addEventListener('change', function(e) {
+            if (e.target.matches('input[type="checkbox"]')) {
+                updatePreview();
+            }
+        });
+
+        // 添加全局规则函数
+        function addGlobalRule() {
+            const container = document.getElementById('global-rules-container');
+            const ruleCount = container.children.length + 1;
+            
+            const ruleHTML = `
+                <div class="rule-item">
+                    <div class="rule-header">
+                        <span class="rule-title">规则 #${ruleCount}</span>
+                        <div class="rule-actions">
+                            <button class="btn btn-small btn-secondary remove-rule">删除</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Key</label>
+                        <input type="number" class="rule-key" value="${ruleCount - 1}" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>匹配条件 (matches)</label>
+                        <textarea class="rule-matches">[text*="跳过"][text.length<10][visibleToUser=true]</textarea>
+                        <p class="help-text">使用CSS选择器语法定义匹配条件</p>
+                    </div>
+                </div>
+            `;
+            
+            container.insertAdjacentHTML('beforeend', ruleHTML);
+            updatePreview();
+        }
+
+        // 添加规则组函数
+        function addGroup() {
+            const container = document.getElementById('groups-container');
+            const groupCount = container.children.length + 1;
+            
+            const groupHTML = `
+                <div class="group-item card" style="margin-top: 12px;">
+                    <div class="section-title">
+                        <h3>规则组 #${groupCount}</h3>
+                        <button class="btn btn-small btn-secondary remove-group">删除组</button>
+                    </div>
+                    <div class="form-group">
+                        <label>Key</label>
+                        <input type="number" class="group-key" value="${groupCount}" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>分类名称</label>
+                        <input type="text" class="group-name" placeholder="例如：弹窗广告">
+                    </div>
+                    <div class="form-group">
+                        <label>功能描述</label>
+                        <textarea class="group-desc" placeholder="描述此规则组的功能"></textarea>
+                    </div>
+                    <div class="section-title">
+                        <h4>规则列表</h4>
+                        <button class="btn btn-small add-rule-to-group">添加规则</button>
+                    </div>
+                    <div class="group-rules-container">
+                        <!-- 规则将通过JS动态添加 -->
+                    </div>
+                </div>
+            `;
+            
+            container.insertAdjacentHTML('beforeend', groupHTML);
+            
+            // 为新组添加一个默认规则
+            const newGroup = container.lastElementChild;
+            addRuleToGroup(newGroup);
+            updatePreview();
+        }
+
+        // 向规则组添加规则
+        function addRuleToGroup(groupItem) {
+            const rulesContainer = groupItem.querySelector('.group-rules-container');
+            const ruleCount = rulesContainer.children.length + 1;
+            
+            const ruleHTML = `
+                <div class="rule-item" style="margin-top: 8px;">
+                    <div class="rule-header">
+                        <span class="rule-title">规则 #${ruleCount}</span>
+                        <div class="rule-actions">
+                            <button class="btn btn-small btn-secondary remove-rule">删除</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Key</label>
+                        <input type="number" class="rule-key" value="${ruleCount}" min="1">
+                    </div>
+                    <div class="checkbox-group" style="margin-bottom: 8px;">
+                        <input type="checkbox" class="rule-fastQuery" checked>
+                        <label>快速查询 (fastQuery)</label>
+                    </div>
+                    <div class="form-group">
+                        <label>活动界面 (activityIds)</label>
+                        <input type="text" class="rule-activityIds" placeholder="例如：com.example.MainActivity">
+                    </div>
+                    <div class="form-group">
+                        <label>匹配条件 (matches)</label>
+                        <textarea class="rule-matches" placeholder='例如：[text="关闭"][visibleToUser=true]'></textarea>
+                        <p class="help-text">使用CSS选择器语法定义匹配条件</p>
+                    </div>
+                </div>
+            `;
+            
+            rulesContainer.insertAdjacentHTML('beforeend', ruleHTML);
+            updatePreview();
+        }
+
+        // 更新预览
+        function updatePreview() {
+            const activeTab = document.querySelector('.tab.active').getAttribute('data-tab');
+            let previewContent = '';
+            
+            if (activeTab === 'global') {
+                previewContent = generateGlobalRule();
+            } else if (activeTab === 'local') {
+                previewContent = generateLocalRule();
+            } else if (activeTab === 'single') {
+                previewContent = generateSingleRule();
+            }
+            
+            document.getElementById('code-preview').innerHTML = highlightJSON5(previewContent);
+        }
+
+        // 生成全局规则（JSON5格式）
+        function generateGlobalRule() {
+            const key = parseInt(document.getElementById('global-key').value) || 0;
+            const name = document.getElementById('global-name').value || '开屏广告';
+            const fastQuery = document.getElementById('global-fastQuery').checked;
+            const matchTime = parseInt(document.getElementById('global-matchTime').value) || 4000;
+            const actionMaximum = parseInt(document.getElementById('global-actionMaximum').value) || 1;
+            const resetMatch = document.getElementById('global-resetMatch').value || 'app';
+            
+            // 收集规则
+            const rules = [];
+            document.querySelectorAll('#global-rules-container .rule-item').forEach((ruleItem, index) => {
+                const ruleKey = parseInt(ruleItem.querySelector('.rule-key').value) || 0;
+                const matches = ruleItem.querySelector('.rule-matches').value || '';
+                
+                if (matches) {
+                    rules.push({
+                        key: ruleKey,
+                        matches: matches
+                    });
+                }
+            });
+            
+            if (rules.length === 0) {
+                return "// 请添加至少一条规则";
+            }
+            
+            // 手动构建JSON5字符串（键名不加引号）
+            let json5 = '{\n';
+            json5 += `  key: ${key},\n`;
+            json5 += `  name: '${name.replace(/'/g, "\\'")}',\n`;
+            json5 += `  fastQuery: ${fastQuery},\n`;
+            json5 += `  matchTime: ${matchTime},\n`;
+            json5 += `  actionMaximum: ${actionMaximum},\n`;
+            json5 += `  resetMatch: '${resetMatch}',\n`;
+            json5 += '  rules: [\n';
+            
+            rules.forEach((rule, index) => {
+                json5 += '    {\n';
+                json5 += `      key: ${rule.key},\n`;
+                json5 += `      matches: '${rule.matches.replace(/'/g, "\\'")}',\n`;
+                json5 += '    }' + (index < rules.length - 1 ? ',' : '') + '\n';
+            });
+            
+            json5 += '  ],\n';
+            json5 += '}';
+            
+            return json5;
+        }
+
+        // 生成本地应用规则（JSON5格式）
+        function generateLocalRule() {
+            const id = document.getElementById('app-id').value;
+            const name = document.getElementById('app-name').value || '未命名应用';
+            const desc = document.getElementById('app-desc').value || '';
+            
+            if (!id) {
+                return "// 请先填写应用ID（包名）";
+            }
+            
+            // 收集规则组
+            const groups = [];
+            document.querySelectorAll('#groups-container .group-item').forEach((groupItem, groupIndex) => {
+                const groupKey = parseInt(groupItem.querySelector('.group-key').value) || (groupIndex + 1);
+                const groupName = groupItem.querySelector('.group-name').value || `规则组${groupIndex + 1}`;
+                const groupDesc = groupItem.querySelector('.group-desc').value || '';
+                
+                // 收集组内的规则
+                const rules = [];
+                groupItem.querySelectorAll('.group-rules-container .rule-item').forEach((ruleItem, ruleIndex) => {
+                    const ruleKey = parseInt(ruleItem.querySelector('.rule-key').value) || (ruleIndex + 1);
+                    const fastQuery = ruleItem.querySelector('.rule-fastQuery').checked;
+                    const activityIds = ruleItem.querySelector('.rule-activityIds').value;
+                    const matches = ruleItem.querySelector('.rule-matches').value;
+                    
+                    const ruleObj = {
+                        key: ruleKey,
+                        fastQuery: fastQuery
+                    };
+                    
+                    if (activityIds) ruleObj.activityIds = activityIds;
+                    if (matches) ruleObj.matches = matches;
+                    
+                    rules.push(ruleObj);
+                });
+                
+                if (rules.length > 0) {
+                    groups.push({
+                        key: groupKey,
+                        name: groupName,
+                        desc: groupDesc,
+                        rules: rules
+                    });
+                }
+            });
+            
+            if (groups.length === 0) {
+                return "// 请添加至少一个规则组";
+            }
+            
+            // 手动构建JSON5字符串（键名不加引号）
+            let json5 = '{\n';
+            json5 += `  id: '${id.replace(/'/g, "\\'")}',\n`;
+            json5 += `  name: '${name.replace(/'/g, "\\'")}',\n`;
+            if (desc) {
+                json5 += `  desc: '${desc.replace(/'/g, "\\'")}',\n`;
+            }
+            json5 += '\n';
+            json5 += '  groups: [\n';
+            
+            groups.forEach((group, groupIndex) => {
+                json5 += '    {\n';
+                json5 += `      key: ${group.key},\n`;
+                json5 += `      name: '${group.name.replace(/'/g, "\\'")}',\n`;
+                if (group.desc) {
+                    json5 += `      desc: '${group.desc.replace(/'/g, "\\'")}',\n`;
+                }
+                json5 += '      rules: [\n';
+                
+                group.rules.forEach((rule, ruleIndex) => {
+                    json5 += '        {\n';
+                    json5 += `          key: ${rule.key},\n`;
+                    json5 += `          fastQuery: ${rule.fastQuery}`;
+                    
+                    if (rule.activityIds) {
+                        json5 += `,\n          activityIds: '${rule.activityIds.replace(/'/g, "\\'")}'`;
+                    }
+                    
+                    if (rule.matches) {
+                        json5 += `,\n          matches: '${rule.matches.replace(/'/g, "\\'")}'`;
+                    }
+                    
+                    json5 += '\n        }' + (ruleIndex < group.rules.length - 1 ? ',' : '') + '\n';
+                });
+                
+                json5 += '      ],\n';
+                json5 += '    }' + (groupIndex < groups.length - 1 ? ',' : '') + '\n';
+            });
+            
+            json5 += '  ],\n';
+            json5 += '}';
+            
+            return json5;
+        }
+
+        // 生成单规则（JSON5格式）
+        function generateSingleRule() {
+            const key = parseInt(document.getElementById('single-key').value) || 1;
+            const fastQuery = document.getElementById('single-fastQuery').checked;
+            const activityIds = document.getElementById('single-activityIds').value;
+            const matches = document.getElementById('single-matches').value;
+            
+            if (!matches) {
+                return "// 请填写匹配条件 (matches)";
+            }
+            
+            // 手动构建JSON5字符串（键名不加引号）
+            let json5 = '{\n';
+            json5 += `  key: ${key},\n`;
+            json5 += `  fastQuery: ${fastQuery}`;
+            
+            if (activityIds) {
+                json5 += `,\n  activityIds: '${activityIds.replace(/'/g, "\\'")}'`;
+            }
+            
+            if (matches) {
+                json5 += `,\n  matches: '${matches.replace(/'/g, "\\'")}'`;
+            }
+            
+            json5 += '\n}';
+            
+            return json5;
+        }
+
+        // JSON5语法高亮
+        function highlightJSON5(json) {
+            return json.replace(/(\w+)\s*:|(['"])(.*?)\2\s*:|(\b(true|false|null)\b)|(-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)|(['"])(.*?)\7/g, function(match, key, quote1, str1, bool, num, quote2, str2) {
+                if (key) {
+                    // 键名（不加引号）
+                    return '<span class="json-key">' + key + '</span>:';
+                } else if (quote1 && str1 !== undefined) {
+                    // 字符串值
+                    return '<span class="json-string">' + quote1 + str1 + quote1 + '</span>';
+                } else if (bool) {
+                    // 布尔值
+                    return '<span class="json-boolean">' + bool + '</span>';
+                } else if (num) {
+                    // 数字
+                    return '<span class="json-number">' + num + '</span>';
+                } else if (quote2 && str2 !== undefined) {
+                    // 字符串值（另一种引号）
+                    return '<span class="json-string">' + quote2 + str2 + quote2 + '</span>';
+                }
+                return match;
+            });
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 添加默认的全局规则
+            addGlobalRule();
+            updatePreview();
+        });
+    </script>
+</body>
+</html>
