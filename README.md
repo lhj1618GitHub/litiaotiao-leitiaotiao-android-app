@@ -5,7 +5,8 @@
 
 # [autojs-4.1](https://github.com/enjoyDay/my-autojs4)；[LiTT](https://github.com/lhj1618GitHub/litiaotiao-autojs-android-app/releases)-李跳跳自定义规则编写辅助工具，配合autos可免修改粘贴。优先下载HTML文件，手机电脑都可以使用，手机也可下载apk文件。
 
-<img width="856" height="687" alt="image" src="https://github.com/user-attachments/assets/e28662a8-1a66-4681-b091-1aab9b799ed0" />
+<img width="828" height="730" alt="image" src="https://github.com/user-attachments/assets/f4e9bdb7-86d6-41ad-ab73-26cf36c53b46" />
+
 
 [界面分析](https://github.com/SongYeXiaoLuo/Xiaoluo.spy/releases)；[李跳跳规则示范及说明](https://github.com/lhj1618GitHub/litiaotiao-leitiaotiao-android-app/releases/download/20251014/litiaotiao_sample.txt)
 
