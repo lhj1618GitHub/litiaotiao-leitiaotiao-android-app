@@ -29,7 +29,7 @@ LiTT：李跳跳规则辅助工具，配合autojs使用效果最佳，可无修�
 
 ***
 
-下载 ：[Gitee](https://gitee.com/lhj1618/LiTT/releases) - [Gitcode](https://gitcode.com/lhj1618/LiTT/releases) - [GitHub](https://github.com/lhj1618GitHub/litiaotiao-autojs-android-app)
+下载 ：[Gitee](https://gitee.com/lhj1618/LiTT) - [Gitcode](https://gitcode.com/lhj1618/LiTT) - [GitHub](https://github.com/lhj1618GitHub/LiTT)
 
 ---
 
