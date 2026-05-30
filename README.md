@@ -6,7 +6,7 @@
 
 ---
 
-LiTT：李跳跳规则辅助工具，配合autojs使用效果最佳，可无修改一键生成。[预览-LiTT](https://lhj1618github.github.io/html/LiTT4.html)
+LiTT：李跳跳规则辅助工具，配合autojs使用效果最佳，可无修改一键生成。[预览-LiTT](https://lhj1618github.github.io/html/LiTT.html)
 
 <img width="815" height="537" alt="00" src="https://github.com/user-attachments/assets/3d888e63-afdb-47b3-a814-d3424cc93edd" />
 
